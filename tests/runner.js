@@ -26,14 +26,33 @@ var jshint = testFiles.splice(jshintPosition, 1);
 
 testFiles = jshint.concat(testFiles);
 
-if (optionOrFile === 'all') {
-  addFiles(mocha, testFiles);
-  addFiles(mocha, '/**/*-slow.js');
-} else if (process.argv.length > 2)  {
-  addFiles(mocha, process.argv.slice(2));
+var testScope = process.env['TEST_SCOPE'];
+
+if (!testScope) {
+  if (optionOrFile === 'all') {
+    addFiles(mocha, testFiles);
+    addFiles(mocha, '/**/*-slow.js');
+  } else if (process.argv.length > 2)  {
+    addFiles(mocha, process.argv.slice(2));
+  } else {
+    addFiles(mocha, testFiles);
+  }
 } else {
-  addFiles(mocha, testFiles);
+  switch (testScope) {
+    case 'unit':
+      addFiles(mocha, '/tests/unit/**/*-test.js');
+      break;
+    case 'acceptance':
+      addFiles(mocha, '/tests/acceptance/**/*-test.js');
+      break;
+    case 'slow':
+      addFiles(mocha, '/tests/**/*-slow.js');
+      break;
+    default:
+      throw new Error('Unable to find what tests should be run. TEST_SCOPE "' + testScope+ '" is unknown');
+  }
 }
+
 
 function addFiles(mocha, files) {
   files = (typeof files === 'string') ? glob.sync(root + files) : files;
