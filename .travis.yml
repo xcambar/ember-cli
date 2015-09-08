@@ -8,14 +8,12 @@ env:
   - TEST_SCOPE=unit
   - TEST_SCOPE=acceptance
   - TEST_SCOPE=slow
-
 os:
   - linux
 script: npm run-script test-all:cover
 before_install:
-  - test $TRAVIS_OS_NAME = "osx" && brew update && brew install nvm && source $(brew --prefix nvm)/nvm.sh && brew install phantomjs || test $TRAVIS_OS_NAME = "linux"
-  - nvm install $NODE_VERSION
   - npm config set spin false
+  - echo "testScope === ${TEST_SCOPE}"
 install:
   - node --version
   - npm --version
