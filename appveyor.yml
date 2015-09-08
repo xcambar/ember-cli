@@ -6,8 +6,12 @@ init:
 
 # Test against these versions of Node.js.
 environment:
-  matrix:
-    - nodejs_version: "0.12"
+  nodejs_version: "0.12"
+
+matrix:
+  - TEST_SUITE: "unit"
+  - TEST_SUITE: "acceptance"
+  - TEST_SUITE: "slow"
 
 # Install scripts. (runs after repo cloning)
 install:
