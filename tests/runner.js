@@ -13,7 +13,7 @@ if (process.env.EOLNEWLINE) {
 rimraf.sync('.node_modules-tmp');
 rimraf.sync('.bower_components-tmp');
 
-var root = 'tests/{unit,acceptance}';
+var root = 'tests';
 var _checkOnlyInTests = RSVP.denodeify(mochaOnlyDetector.checkFolder.bind(null, root + '/**/*{-test,-slow}.js'));
 var optionOrFile = process.argv[2];
 var mocha = new Mocha({
