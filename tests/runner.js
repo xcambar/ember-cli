@@ -25,9 +25,9 @@ var jshint = testFiles.splice(jshintPosition, 1);
 
 testFiles = jshint.concat(testFiles);
 
-var testScope = process.env['TEST_SCOPE'];
+var testSuite = process.env['TEST_SUITE'];
 
-switch (testScope) {
+switch (testSuite) {
   case 'unit':
     addFiles(mocha, '/unit/**/*-test.js');
     break;
@@ -38,7 +38,7 @@ switch (testScope) {
     addFiles(mocha, '/**/*-slow.js');
     break;
   default:
-    throw new Error('Unable to find what tests should be run. TEST_SCOPE "' + testScope+ '" is unknown');
+    throw new Error('Unable to find what tests should be run. TEST_SUITE "' + testSuite+ '" is unknown');
 }
 
 function addFiles(mocha, files) {
