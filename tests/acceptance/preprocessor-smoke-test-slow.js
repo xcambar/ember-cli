@@ -41,10 +41,10 @@ describe('Acceptance: preprocessor-smoke-test', function() {
   it('addons with standard preprocessors compile correctly', function() {
     this.timeout(100000);
 
+    var packageJsonPath = path.join(__dirname, '..', '..', 'tmp', appName, 'package.json');
+    var packageJson = require(packageJsonPath);
     return copyFixtureFiles('preprocessor-tests/app-with-addon-with-preprocessors')
       .then(function() {
-        var packageJsonPath = path.join(__dirname, '..', '..', 'tmp', appName, 'package.json');
-        var packageJson = require(packageJsonPath);
         packageJson.devDependencies['broccoli-sass'] = 'latest';
         packageJson.devDependencies['ember-cool-addon'] = 'latest';
 
@@ -64,16 +64,21 @@ describe('Acceptance: preprocessor-smoke-test', function() {
 
         expect(mainCSS).to.contain('app styles included');
         expect(vendorCSS).to.contain('addon styles included');
+      }).then(function () {
+        delete packageJson.devDependencies['broccoli-sass'];
+        delete packageJson.devDependencies['ember-cool-addon'];
+
+        return fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
       });
   });
 
   it('addon registry entries are added in the proper order', function() {
     this.timeout(100000);
 
+    var packageJsonPath = path.join(__dirname, '..', '..', 'tmp', appName, 'package.json');
+    var packageJson = require(packageJsonPath);
     return copyFixtureFiles('preprocessor-tests/app-registry-ordering')
       .then(function() {
-        var packageJsonPath = path.join(__dirname, '..', '..', 'tmp', appName, 'package.json');
-        var packageJson = require(packageJsonPath);
         packageJson.devDependencies['first-dummy-preprocessor'] = 'latest';
         packageJson.devDependencies['second-dummy-preprocessor'] = 'latest';
 
@@ -90,17 +95,22 @@ describe('Acceptance: preprocessor-smoke-test', function() {
         expect(appJs).to.not.contain('__SECOND_PREPROCESSOR_REPLACEMENT_TOKEN__', 'token should not be contained');
         expect(appJs).to.not.contain('__FIRST_PREPROCESSOR_REPLACEMENT_TOKEN__', 'token should not be contained');
         expect(appJs).to.contain('replacedByPreprocessor', 'token should have been replaced in app bundle');
+      })
+      .then(function() {
+        delete packageJson.devDependencies['first-dummy-preprocessor'];
+        delete packageJson.devDependencies['second-dummy-preprocessor'];
+
+        return fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
       });
   });
 
   it('addons without preprocessors compile correctly', function() {
     this.timeout(100000);
 
+    var packageJsonPath = path.join(__dirname, '..', '..', 'tmp', appName, 'package.json');
+    var packageJson = require(packageJsonPath);
     return copyFixtureFiles('preprocessor-tests/app-with-addon-without-preprocessors')
       .then(function() {
-        var packageJsonPath = path.join(__dirname, '..', '..', 'tmp', appName, 'package.json');
-        var packageJson = require(packageJsonPath);
-        packageJson.devDependencies['broccoli-sass'] = 'latest';
         packageJson.devDependencies['ember-cool-addon'] = 'latest';
 
         return fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
@@ -119,6 +129,11 @@ describe('Acceptance: preprocessor-smoke-test', function() {
 
         expect(mainCSS).to.contain('app styles included');
         expect(vendorCSS).to.contain('addon styles included');
+      })
+      .then(function() {
+        delete packageJson.devDependencies['ember-cool-addon'];
+
+        return fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
       });
   });
 
@@ -132,10 +147,10 @@ describe('Acceptance: preprocessor-smoke-test', function() {
   it('addons depending on preprocessor addon preprocesses addon but not app', function() {
     this.timeout(100000);
 
+    var packageJsonPath = path.join(__dirname, '..', '..', 'tmp', appName, 'package.json');
+    var packageJson = require(packageJsonPath);
     return copyFixtureFiles('preprocessor-tests/app-with-addon-with-preprocessors-2')
       .then(function() {
-        var packageJsonPath = path.join(__dirname, '..', '..', 'tmp', appName, 'package.json');
-        var packageJson = require(packageJsonPath);
         packageJson.devDependencies['ember-cool-addon'] = 'latest';
 
         return fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
@@ -156,6 +171,11 @@ describe('Acceptance: preprocessor-smoke-test', function() {
         expect(appJs).to.not.contain('replacedByPreprocessor', 'token should not have been replaced in app bundle');
         expect(vendorJs).to.not.contain('__PREPROCESSOR_REPLACEMENT_TOKEN__', 'token should have been replaced in vendor bundle');
         expect(vendorJs).to.contain('replacedByPreprocessor', 'token should have been replaced in vendor bundle');
+      })
+      .then(function() {
+        delete packageJson.devDependencies['ember-cool-addon'];
+
+        return fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
       });
   });
 
@@ -171,10 +191,10 @@ describe('Acceptance: preprocessor-smoke-test', function() {
   it('addon N levels deep depending on preprocessor preprocesses that parent addon only', function() {
     this.timeout(100000);
 
+    var packageJsonPath = path.join(__dirname, '..', '..', 'tmp', appName, 'package.json');
+    var packageJson = require(packageJsonPath);
     return copyFixtureFiles('preprocessor-tests/app-with-addon-with-preprocessors-3')
       .then(function() {
-        var packageJsonPath = path.join(__dirname, '..', '..', 'tmp', appName, 'package.json');
-        var packageJson = require(packageJsonPath);
         packageJson.devDependencies['ember-shallow-addon'] = 'latest';
 
         return fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
@@ -197,6 +217,11 @@ describe('Acceptance: preprocessor-smoke-test', function() {
         expect(vendorJs).to.contain('deep: "replacedByPreprocessor"', 'token should have been replaced in deep component');
         expect(vendorJs).to.contain('shallow: __PREPROCESSOR_REPLACEMENT_TOKEN__', 'token should not have been replaced in shallow component');
         expect(vendorJs).to.not.contain('shallow: "replacedByPreprocessor"', 'token should not have been replaced in shallow component');
+      })
+      .then(function() {
+        delete packageJson.devDependencies['ember-shallow-addon'];
+
+        return fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson));
       });
   });
 
