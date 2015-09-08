@@ -19,7 +19,7 @@ var linkDependencies    = acceptance.linkDependencies;
 var cleanupRun          = acceptance.cleanupRun;
 var existsSync          = require('exists-sync');
 
-var appName  = 'some-cool-app';
+var appName  = 'brocfile-test-app';
 
 describe('Acceptance: brocfile-smoke-test', function() {
   this.timeout(400000);
