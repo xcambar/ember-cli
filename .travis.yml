@@ -13,7 +13,6 @@ os:
 script: npm run-script test-all:cover
 before_install:
   - npm config set spin false
-  - echo "testScope === ${TEST_SCOPE}"
 install:
   - node --version
   - npm --version

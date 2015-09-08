@@ -14,8 +14,7 @@ rimraf.sync('.node_modules-tmp');
 rimraf.sync('.bower_components-tmp');
 
 var root = 'tests';
-var _checkOnlyInTests = RSVP.denodeify(mochaOnlyDetector.checkFolder.bind(null, root + '/**/*{-test,-slow}.js'));
-var optionOrFile = process.argv[2];
+var _checkOnlyInTests = RSVP.denodeify(mochaOnlyDetector.checkFolder.bind(null, root + '/{unit,acceptance}/**/*{-test,-slow}.js'));
 var mocha = new Mocha({
   timeout: 5000,
   reporter: 'spec'
@@ -28,31 +27,19 @@ testFiles = jshint.concat(testFiles);
 
 var testScope = process.env['TEST_SCOPE'];
 
-if (!testScope) {
-  if (optionOrFile === 'all') {
-    addFiles(mocha, testFiles);
+switch (testScope) {
+  case 'unit':
+    addFiles(mocha, '/unit/**/*-test.js');
+    break;
+  case 'acceptance':
+    addFiles(mocha, '/acceptance/**/*-test.js');
+    break;
+  case 'slow':
     addFiles(mocha, '/**/*-slow.js');
-  } else if (process.argv.length > 2)  {
-    addFiles(mocha, process.argv.slice(2));
-  } else {
-    addFiles(mocha, testFiles);
-  }
-} else {
-  switch (testScope) {
-    case 'unit':
-      addFiles(mocha, '/unit/**/*-test.js');
-      break;
-    case 'acceptance':
-      addFiles(mocha, '/acceptance/**/*-test.js');
-      break;
-    case 'slow':
-      addFiles(mocha, '/**/*-slow.js');
-      break;
-    default:
-      throw new Error('Unable to find what tests should be run. TEST_SCOPE "' + testScope+ '" is unknown');
-  }
+    break;
+  default:
+    throw new Error('Unable to find what tests should be run. TEST_SCOPE "' + testScope+ '" is unknown');
 }
-
 
 function addFiles(mocha, files) {
   files = (typeof files === 'string') ? glob.sync(root + files) : files;
