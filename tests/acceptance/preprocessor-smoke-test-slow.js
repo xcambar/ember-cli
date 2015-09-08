@@ -13,7 +13,7 @@ var teardownTestTargets = acceptance.teardownTestTargets;
 var linkDependencies    = acceptance.linkDependencies;
 var cleanupRun          = acceptance.cleanupRun;
 
-var appName  = 'some-cool-app';
+var appName  = 'preprocessor-test-app';
 
 describe('Acceptance: preprocessor-smoke-test', function() {
   before(function() {

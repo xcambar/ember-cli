@@ -12,7 +12,7 @@ var linkDependencies    = acceptance.linkDependencies;
 var cleanupRun          = acceptance.cleanupRun;
 
 
-var appName  = 'some-cool-app';
+var appName  = 'blueprint-test-app';
 
 describe('Acceptance: blueprint smoke tests', function() {
   this.timeout(400000);

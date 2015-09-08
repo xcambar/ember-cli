@@ -5,7 +5,7 @@ var fs       = require('fs');
 var crypto   = require('crypto');
 var expect   = require('chai').expect;
 var walkSync = require('walk-sync');
-var appName  = 'some-cool-app';
+var appName  = 'smoke-test-app';
 var EOL      = require('os').EOL;
 
 var runCommand          = require('../helpers/run-command');
