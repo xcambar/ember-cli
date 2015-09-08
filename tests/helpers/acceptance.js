@@ -26,20 +26,6 @@ function handleResult(result) {
   throw result;
 }
 
-function downloaded(item) {
-  var exists = false;
-  switch (item) {
-    case 'node_modules':
-      exists = existsSync(path.join(root, '.node_modules-tmp'));
-      break;
-    case 'bower_components':
-      exists = existsSync(path.join(root, '.bower_components-tmp'));
-      break;
-  }
-
-  return exists;
-}
-
 function mvRm(from, to) {
   var dir = path.join(root, to);
   from = path.resolve(from);
@@ -84,44 +70,16 @@ function createTmp(command) {
  * @return {Promise}  The result of the running the command
  */
 function createTestTargets(projectName, options) {
-  var command;
   options = options || {};
   options.command = options.command || 'new';
 
-  var noNodeModules = !downloaded('node_modules');
-  // Fresh install
-  if (noNodeModules && !downloaded('bower_components')) {
-    command = function() {
-      return applyCommand(options.command, projectName);
-    };
-    // bower_components but no node_modules
-  } else if (noNodeModules && downloaded('bower_components')) {
-    command = function() {
-      return applyCommand(options.command, projectName, '--skip-bower');
-    };
-    // node_modules but no bower_components
-  } else if (!downloaded('bower_components') && downloaded('node_modules')) {
-    command = function() {
-      return applyCommand(options.command, projectName, '--skip-npm');
-    };
-  } else {
-    // Everything is already there
-    command = function() {
-      return applyCommand(options.command, projectName, '--skip-npm', '--skip-bower');
-    };
-  }
-
   return createTmp(function() {
-    return command().
+    return applyCommand(options.command, projectName).
       catch(handleResult).
       then(function(value) {
-        if (noNodeModules) {
-          return exec('npm install ember-disable-prototype-extensions').then(function() {
-            return value;
-          });
-        }
-
-        return value;
+        return exec('npm install ember-disable-prototype-extensions').then(function() {
+          return value;
+        });
     });
   });
 }
