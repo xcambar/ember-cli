@@ -40,13 +40,13 @@ if (!testScope) {
 } else {
   switch (testScope) {
     case 'unit':
-      addFiles(mocha, '/tests/unit/**/*-test.js');
+      addFiles(mocha, '/unit/**/*-test.js');
       break;
     case 'acceptance':
-      addFiles(mocha, '/tests/acceptance/**/*-test.js');
+      addFiles(mocha, '/acceptance/**/*-test.js');
       break;
     case 'slow':
-      addFiles(mocha, '/tests/**/*-slow.js');
+      addFiles(mocha, '/**/*-slow.js');
       break;
     default:
       throw new Error('Unable to find what tests should be run. TEST_SCOPE "' + testScope+ '" is unknown');
