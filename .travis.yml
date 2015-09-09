@@ -5,11 +5,11 @@ node_js:
   - "iojs"
 sudo: false
 env:
-  - TEST_SUITE=unit
+  # - TEST_SUITE=unit
   - TEST_SUITE=addon
-  - TEST_SUITE=help
-  - TEST_SUITE=acceptance
-  - TEST_SUITE=slow
+  # - TEST_SUITE=help
+  # - TEST_SUITE=acceptance
+  # - TEST_SUITE=slow
 os:
   - linux
 script: npm run-script test-all:cover

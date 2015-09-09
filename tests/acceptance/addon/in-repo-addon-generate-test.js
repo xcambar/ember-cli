@@ -2,12 +2,12 @@
 
 'use strict';
 
-var Promise              = require('../../lib/ext/promise');
-var assertFile           = require('../helpers/assert-file');
-var assertFileEquals     = require('../helpers/assert-file-equals');
-var assertFileToNotExist = require('../helpers/assert-file-to-not-exist');
-var conf                 = require('../helpers/conf');
-var ember                = require('../helpers/ember');
+var Promise              = require('../../../lib/ext/promise');
+var assertFile           = require('../../helpers/assert-file');
+var assertFileEquals     = require('../../helpers/assert-file-equals');
+var assertFileToNotExist = require('../../helpers/assert-file-to-not-exist');
+var conf                 = require('../../helpers/conf');
+var ember                = require('../../helpers/ember');
 var fs                   = require('fs-extra');
 var path                 = require('path');
 var remove               = Promise.denodeify(fs.remove);
@@ -15,7 +15,7 @@ var root                 = process.cwd();
 var tmp                  = require('tmp-sync');
 var tmproot              = path.join(root, 'tmp');
 var EOL                  = require('os').EOL;
-var BlueprintNpmTask     = require('../helpers/disable-npm-on-blueprint');
+var BlueprintNpmTask     = require('../../helpers/disable-npm-on-blueprint');
 var expect               = require('chai').expect;
 
 describe('Acceptance: ember generate in-repo-addon', function() {
@@ -118,7 +118,7 @@ describe('Acceptance: ember generate in-repo-addon', function() {
       assertFile('lib/my-addon/addon/components/x-foo.js', {
         contains: [
           "import Ember from 'ember';",
-          "import layout from '../templates/components/x-foo';",
+          "import layout from '../../templates/components/x-foo';",
           "export default Ember.Component.extend({",
           "layout: layout",
           "});"
@@ -159,7 +159,7 @@ describe('Acceptance: ember generate in-repo-addon', function() {
       });
     });
   });
-  
+
   it('in-repo-addon component-test x-foo --unit', function() {
     return generateInRepoAddon(['component-test', 'x-foo', '--in-repo-addon=my-addon', '--unit']).then(function() {
       assertFile('tests/unit/components/x-foo-test.js', {
@@ -177,7 +177,7 @@ describe('Acceptance: ember generate in-repo-addon', function() {
       assertFile('lib/my-addon/addon/components/nested/x-foo.js', {
         contains: [
           "import Ember from 'ember';",
-          "import layout from '../../templates/components/nested/x-foo';",
+          "import layout from '../../../templates/components/nested/x-foo';",
           "export default Ember.Component.extend({",
           "layout: layout",
           "});"
@@ -217,7 +217,7 @@ describe('Acceptance: ember generate in-repo-addon', function() {
         ]
       });
       assertFile('tests/unit/helpers/foo-bar-test.js', {
-        contains: "import { fooBar } from '../../../helpers/foo-bar';"
+        contains: "import { fooBar } from '../../../../helpers/foo-bar';"
       });
     });
   });
@@ -237,7 +237,7 @@ describe('Acceptance: ember generate in-repo-addon', function() {
         ]
       });
       assertFile('tests/unit/helpers/foo/bar-baz-test.js', {
-        contains: "import { fooBarBaz } from '../../../../helpers/foo/bar-baz';"
+        contains: "import { fooBarBaz } from '../../../../../helpers/foo/bar-baz';"
       });
     });
   });
@@ -517,7 +517,7 @@ describe('Acceptance: ember generate in-repo-addon', function() {
       });
       assertFile('tests/unit/mixins/foo-test.js', {
         contains: [
-          "import FooMixin from '../../../mixins/foo';"
+          "import FooMixin from '../../../../mixins/foo';"
         ]
       });
     });
@@ -533,7 +533,7 @@ describe('Acceptance: ember generate in-repo-addon', function() {
       });
       assertFile('tests/unit/mixins/foo/bar-test.js', {
         contains: [
-          "import FooBarMixin from '../../../mixins/foo/bar';"
+          "import FooBarMixin from '../../../../mixins/foo/bar';"
         ]
       });
     });
@@ -543,7 +543,7 @@ describe('Acceptance: ember generate in-repo-addon', function() {
     return generateInRepoAddon(['mixin', 'foo/bar/baz', '--in-repo-addon=my-addon']).then(function() {
       assertFile('tests/unit/mixins/foo/bar/baz-test.js', {
         contains: [
-          "import FooBarBazMixin from '../../../mixins/foo/bar/baz';"
+          "import FooBarBazMixin from '../../../../mixins/foo/bar/baz';"
         ]
       });
     });
@@ -597,7 +597,7 @@ describe('Acceptance: ember generate in-repo-addon', function() {
     return generateInRepoAddon(['adapter', 'foo/bar', '--in-repo-addon=my-addon', '--base-class=foo']).then(function() {
       assertFile('lib/my-addon/addon/adapters/foo/bar.js', {
         contains: [
-          "import FooAdapter from \'../foo\';",
+          "import FooAdapter from \'../../foo\';",
           "export default FooAdapter.extend({" + EOL + "});"
         ]
       });
@@ -733,7 +733,7 @@ describe('Acceptance: ember generate in-repo-addon', function() {
       });
       assertFile('tests/unit/utils/foo-bar-test.js', {
         contains: [
-          "import fooBar from '../../../utils/foo-bar';"
+          "import fooBar from '../../../../utils/foo-bar';"
         ]
       });
     });
@@ -753,7 +753,7 @@ describe('Acceptance: ember generate in-repo-addon', function() {
       });
       assertFile('tests/unit/utils/foo/bar-baz-test.js', {
         contains: [
-          "import fooBarBaz from '../../../utils/foo/bar-baz';"
+          "import fooBarBaz from '../../../../utils/foo/bar-baz';"
         ]
       });
     });
@@ -804,7 +804,7 @@ describe('Acceptance: ember generate in-repo-addon', function() {
   });
   it('in-repo-addon acceptance-test foo', function() {
     return generateInRepoAddon(['acceptance-test', 'foo', '--in-repo-addon=my-addon']).then(function() {
-      var expected = path.join(__dirname, '../fixtures/generate/acceptance-test-expected.js');
+      var expected = path.join(__dirname, '../../fixtures/generate/acceptance-test-expected.js');
 
       assertFileEquals('tests/acceptance/foo-test.js', expected);
       assertFileToNotExist('app/acceptance-tests/foo.js');

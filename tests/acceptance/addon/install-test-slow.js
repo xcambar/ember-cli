@@ -2,10 +2,10 @@
 
 'use strict';
 
-var assertFile = require('../helpers/assert-file');
-var conf       = require('../helpers/conf');
-var ember      = require('../helpers/ember');
-var tmp        = require('../helpers/tmp');
+var assertFile = require('../../helpers/assert-file');
+var conf       = require('../../helpers/conf');
+var ember      = require('../../helpers/ember');
+var tmp        = require('../../helpers/tmp');
 var expect     = require('chai').expect;
 
 describe('Acceptance: ember install', function() {

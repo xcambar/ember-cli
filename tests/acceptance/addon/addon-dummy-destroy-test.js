@@ -2,11 +2,11 @@
 
 'use strict';
 
-var Promise    = require('../../lib/ext/promise');
+var Promise    = require('../../../lib/ext/promise');
 var expect     = require('chai').expect;
-var assertFile = require('../helpers/assert-file');
-var conf       = require('../helpers/conf');
-var ember      = require('../helpers/ember');
+var assertFile = require('../../helpers/assert-file');
+var conf       = require('../../helpers/conf');
+var ember      = require('../../helpers/ember');
 var existsSync = require('exists-sync');
 var fs         = require('fs-extra');
 var path       = require('path');
@@ -15,7 +15,7 @@ var root       = process.cwd();
 var tmp        = require('tmp-sync');
 var tmproot    = path.join(root, 'tmp');
 
-var BlueprintNpmTask = require('../helpers/disable-npm-on-blueprint');
+var BlueprintNpmTask = require('../../helpers/disable-npm-on-blueprint');
 
 describe('Acceptance: ember destroy in-addon-dummy', function() {
   this.timeout(20000);

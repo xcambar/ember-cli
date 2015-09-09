@@ -2,12 +2,12 @@
 
 'use strict';
 
-var Promise              = require('../../lib/ext/promise');
-var assertFile           = require('../helpers/assert-file');
-var assertFileEquals     = require('../helpers/assert-file-equals');
-var assertFileToNotExist = require('../helpers/assert-file-to-not-exist');
-var conf                 = require('../helpers/conf');
-var ember                = require('../helpers/ember');
+var Promise              = require('../../../lib/ext/promise');
+var assertFile           = require('../../helpers/assert-file');
+var assertFileEquals     = require('../../helpers/assert-file-equals');
+var assertFileToNotExist = require('../../helpers/assert-file-to-not-exist');
+var conf                 = require('../../helpers/conf');
+var ember                = require('../../helpers/ember');
 var fs                   = require('fs-extra');
 var path                 = require('path');
 var remove               = Promise.denodeify(fs.remove);
@@ -15,7 +15,7 @@ var root                 = process.cwd();
 var tmp                  = require('tmp-sync');
 var tmproot              = path.join(root, 'tmp');
 var EOL                  = require('os').EOL;
-var BlueprintNpmTask     = require('../helpers/disable-npm-on-blueprint');
+var BlueprintNpmTask     = require('../../helpers/disable-npm-on-blueprint');
 var expect               = require('chai').expect;
 
 describe('Acceptance: ember generate in-addon-dummy', function() {
@@ -445,7 +445,7 @@ describe('Acceptance: ember generate in-addon-dummy', function() {
     return generateInAddon(['adapter', 'foo/bar', '--base-class=foo', '--dummy']).then(function() {
       assertFile('tests/dummy/app/adapters/foo/bar.js', {
         contains: [
-          "import FooAdapter from \'../foo\';",
+          "import FooAdapter from \'../../foo\';",
           "export default FooAdapter.extend({" + EOL + "});"
         ]
       });
@@ -788,7 +788,7 @@ describe('Acceptance: ember generate in-addon-dummy', function() {
 
     it('dummy acceptance-test foo', function() {
       return generateInAddon(['acceptance-test', 'foo', '--dummy']).then(function() {
-        var expected = path.join(__dirname, '../fixtures/generate/addon-acceptance-test-expected.js');
+        var expected = path.join(__dirname, '../../fixtures/generate/addon-acceptance-test-expected.js');
 
         assertFileEquals('tests/acceptance/foo-test.js', expected);
         assertFileToNotExist('app/acceptance-tests/foo.js');
@@ -797,7 +797,7 @@ describe('Acceptance: ember generate in-addon-dummy', function() {
 
     it('dummy acceptance-test foo/bar', function() {
       return generateInAddon(['acceptance-test', 'foo/bar', '--dummy']).then(function() {
-        var expected = path.join(__dirname, '../fixtures/generate/addon-acceptance-test-nested-expected.js');
+        var expected = path.join(__dirname, '../../fixtures/generate/addon-acceptance-test-nested-expected.js');
 
         assertFileEquals('tests/acceptance/foo/bar-test.js', expected);
         assertFileToNotExist('app/acceptance-tests/foo/bar.js');
