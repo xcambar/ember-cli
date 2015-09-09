@@ -5,9 +5,7 @@ node_js:
   - "iojs"
 sudo: false
 env:
-  - TEST_SUITE=unit
-  - TEST_SUITE=acceptance
-  - TEST_SUITE=slow
+  - TEST_SUITE=install
 os:
   - linux
 script: npm run-script test-all:cover
