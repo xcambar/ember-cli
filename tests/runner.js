@@ -19,26 +19,34 @@ var mocha = new Mocha({
   timeout: 5000,
   reporter: 'spec'
 });
-var testFiles = glob.sync(root + '/**/*-test.js');
-var jshintPosition = testFiles.indexOf('tests/unit/jshint-test.js');
-var jshint = testFiles.splice(jshintPosition, 1);
 
-testFiles = jshint.concat(testFiles);
+var testSuite = process.env['TEST_SUITE'] || 'default';
+var testFiles;
 
-var testSuite = process.env['TEST_SUITE'];
+if (process.argv.length > 2) {
+  testFiles = process.argv.slice(2);
+} else {
+  testFiles = filesForTestSuite(testSuite);
+}
 
-switch (testSuite) {
-  case 'unit':
-    addFiles(mocha, '/unit/**/*-test.js');
-    break;
-  case 'acceptance':
-    addFiles(mocha, '/acceptance/**/*-test.js');
-    break;
-  case 'slow':
-    addFiles(mocha, '/**/*-slow.js');
-    break;
-  default:
-    throw new Error('Unable to find what tests should be run. TEST_SUITE "' + testSuite+ '" is unknown');
+addFiles(mocha, testFiles);
+
+function filesForTestSuite(testSuite) {
+  switch (testSuite) {
+    case 'unit':
+      return '/unit/**/*-test.js';
+    case 'acceptance':
+      return '/acceptance/**/*-test.js';
+    case 'slow':
+      return '/**/*-slow.js';
+    case 'default':
+      var files = glob.sync(root + '/{unit,acceptance}/**/*-test.js');
+      var jshintPosition = files.indexOf('tests/unit/jshint-test.js');
+      var jshint = files.splice(jshintPosition, 1);
+      return jshint.concat(files);
+    default:
+      throw new Error('Unable to find what tests should be run. The test suite "' + testSuite+ '" is unknown');
+  }
 }
 
 function addFiles(mocha, files) {
