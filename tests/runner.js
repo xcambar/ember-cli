@@ -36,11 +36,13 @@ function filesForTestSuite(testSuite) {
     case 'unit':
       return '/unit/**/*-test.js';
     case 'acceptance':
-      return '/acceptance/**/*-test.js';
-    case 'install':
-      return '/acceptance/install-test-slow.js';
+      return '/acceptance/*-test.js';
     case 'slow':
-      return '/acceptance/**/*-slow.js';
+      return '/acceptance/*-slow.js';
+    case 'addon':
+      return '/acceptance/addon/*.js';
+    case 'help':
+      return '/acceptance/help/*.js';
     case 'default':
       var files = glob.sync(root + '/{unit,acceptance}/**/*-test.js');
       var jshintPosition = files.indexOf('tests/unit/jshint-test.js');
