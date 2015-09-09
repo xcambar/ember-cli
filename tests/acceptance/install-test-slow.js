@@ -2,20 +2,14 @@
 
 'use strict';
 
-var Promise    = require('../../lib/ext/promise');
 var assertFile = require('../helpers/assert-file');
 var conf       = require('../helpers/conf');
 var ember      = require('../helpers/ember');
-var path       = require('path');
-var remove     = Promise.denodeify(require('fs-extra').remove);
-var root       = process.cwd();
-var tmp        = require('tmp-sync');
-var tmproot    = path.join(root, 'tmp');
+var tmp        = require('../helpers/tmp');
 var expect     = require('chai').expect;
 
 describe('Acceptance: ember install', function() {
   this.timeout(60000);
-  var tmpdir;
 
   before(function() {
     conf.setup();
@@ -26,13 +20,14 @@ describe('Acceptance: ember install', function() {
   });
 
   beforeEach(function() {
-    tmpdir = tmp.in(tmproot);
-    process.chdir(tmpdir);
+    return tmp.setup('./tmp')
+      .then(function() {
+        process.chdir('./tmp');
+      });
   });
 
   afterEach(function() {
-    process.chdir(root);
-    return remove(tmproot);
+    return tmp.teardown('./tmp');
   });
 
   function initApp() {
